@@ -30,14 +30,17 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t new-demoapp .'
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
-                    if (isUnix()) {
-                        sh './venv/bin/python app.py'
-                    } else {
-                        bat 'venv\\Scripts\\python app.py'
-                    }
+                    sh 'docker run --name new-demoapp-container -d new-demoapp'
                 }
             }
         }
